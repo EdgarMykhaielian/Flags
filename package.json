@@ -1,0 +1,23 @@
+{
+  "name": "flags",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdgarMykhaielian/Flags.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EdgarMykhaielian/Flags/issues"
+  },
+  "homepage": "https://github.com/EdgarMykhaielian/Flags#readme",
+  "dependencies": {
+    "@googlemaps/js-api-loader": "^1.15.1",
+    "@googlemaps/region-lookup": "^0.0.0"
+  }
+}
