@@ -3,7 +3,7 @@ const card = document.querySelector(".card__inner");
 getCountries();
 
 function getCountries() {
-    return fetch("/countries.json")
+    return fetch("./countries.json")
         .then((response) => response.json())
         .then((data) => startGame(data));
 }
