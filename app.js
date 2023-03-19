@@ -1,6 +1,20 @@
+const cardsContainer = document.querySelector(".card");
 const card = document.querySelector(".card__inner");
+const startScreen = document.querySelector(".start-screen");
+const preloader = document.getElementById("preloader");
 
-getCountries();
+startScreen.addEventListener("click", (e) => {
+    if (e.target.closest(".start-btn")) {
+        startScreen.style.display = "none";
+        preloader.style.display = "block";
+
+        setTimeout(function () {
+            cardsContainer.hidden = false;
+            getCountries();
+            // document.body.style.backgroundColor = "lightgrey";
+        }, 4000);
+    }
+});
 
 function getCountries() {
     return fetch("./countries.json")
@@ -105,7 +119,7 @@ function showCard(cardData) {
     setTimeout(() => {
         card.innerHTML = `
     <div class="card__face card__face--front">
-                <h2>Guess the country and flip the card</h2>
+                <h2>Guess the country to flip the card</h2>
                 <div class="flag">
                     <img src="${cardData.flags.png}">
                 </div>
@@ -158,18 +172,26 @@ function showCard(cardData) {
                 </div>
             </div>
         `;
+        if (preloader) {
+            preloader.remove();
+        }
         assignCardFlipListener();
         makeInput(cardData);
         initMap(cardData);
-        // console.clear();
     }, 200);
 }
 
 function initMap(cardData) {
     const country = { lat: cardData.latlng[0], lng: cardData.latlng[1] };
     const capital = {
-        lat: cardData.capitalInfo.latlng[0],
-        lng: cardData.capitalInfo.latlng[1],
+        lat:
+            cardData.capitalInfo && cardData.capitalInfo.latlng
+                ? cardData.capitalInfo.latlng[0]
+                : cardData.latlng[0],
+        lng:
+            cardData.capitalInfo && cardData.capitalInfo.latlng
+                ? cardData.capitalInfo.latlng[1]
+                : cardData.latlng[1],
     };
 
     let featureLayer;
@@ -213,7 +235,6 @@ function makeInput(cardData) {
     const newName = cardData.name.common
         .toLowerCase()
         .replace(/[^a-z\s]/gi, "");
-    console.log(newName);
     let html = "";
     for (let i = 0; i < newName.length; i++) {
         html += `
@@ -254,7 +275,8 @@ function handleInput(newName) {
             document.getElementById("flip-btn-front").disabled = false;
             hint.disabled = true;
             input.forEach((input) => {
-                input.style.color = "green";
+                input.style.color = "#005bbb";
+                input.style.fontWeight = "600";
                 input.disabled = true;
             });
         } else {

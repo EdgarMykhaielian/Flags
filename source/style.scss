@@ -1,4 +1,5 @@
 @use "reset";
+@use "preloader";
 
 * {
     box-sizing: border-box;
@@ -9,7 +10,122 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #2a2c35;
 }
+
+.start-screen {
+    padding-top: 20px;
+    width: 100vw;
+    height: 90vh;
+    background-color: #2a2c35;
+    box-shadow: 0px 3px 18px 3px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    .headers {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    h1,
+    h6 {
+        padding: 0 10px;
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 56px;
+        line-height: 56px;
+        text-align: center;
+        color: #d9d9d9;
+        max-width: 90%;
+        text-transform: uppercase;
+    }
+    h6 {
+        font-size: 40px;
+        color: #e5b855;
+    }
+    .start-btn {
+        padding-bottom: 50px;
+        &:hover {
+            transform: scale(1.1);
+            transition: all 0.9s ease-in-out;
+        }
+    }
+    .start-btn:hover .one {
+        fill: #d9d9d9;
+    }
+    .start-btn:hover .two {
+        fill: #d9d9d9;
+    }
+    .start-btn:hover .three {
+        fill: #ffd500;
+        filter: brightness(1);
+    }
+    .start-btn:hover .four {
+        fill: #005bbb;
+    }
+
+    .earth {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: url(../assets/earthMap.jpg);
+        background-size: cover;
+        animation: animateEarth 100s linear infinite;
+        box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.5);
+    }
+    .cloud {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 250px;
+        height: 250px;
+        opacity: 0.8;
+        border-radius: 50%;
+        background: url(../assets/earthCloud.png);
+        background-size: cover;
+        animation: animateCloud 700s linear infinite;
+        box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .flags {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 375px;
+        height: 375px;
+        opacity: 0.8;
+        border-radius: 50%;
+        background: url(../assets/flagsBorder.png);
+        background-size: cover;
+    }
+    @keyframes animateEarth {
+        0% {
+            background-position: 0 0;
+        }
+        100% {
+            /* background-position: 719px 0; */
+            background-position: 1000px 0;
+        }
+    }
+    @keyframes animateCloud {
+        0% {
+            background-position: 4096px 0;
+        }
+        100% {
+            /* background-position: 719px 0; */
+            background-position: 0px 0;
+        }
+    }
+}
+
 .card {
     width: 395px;
     height: 650px;
@@ -21,18 +137,22 @@ body {
         transform-style: preserve-3d;
         position: relative;
         .card__face {
-            border: 3px solid #2a2c35;
             border-radius: 30px;
+            border: 1px solid #2a2c35;
             background-color: #d9d9d9;
+            background-color: lightblue;
             position: absolute;
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
             overflow: hidden;
-            box-shadow: 0px 3px 18px 3px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 3px 18px 3px rgba(0, 0, 0, 0.4);
+            box-shadow: rgba(0, 0, 0, 0.4) -5px 5px,
+                rgba(0, 0, 0, 0.3) -10px 10px, rgba(42, 44, 53, 0.99) -15px 15px,
+                rgba(0, 0, 0, 0.1) -10px 10px, rgba(0, 0, 0, 0.05) -0 0;
         }
         .card__face--front {
-            padding: 30px 0;
+            padding: 50px 0 30px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -43,17 +163,20 @@ body {
                 padding: 0 10px;
                 font-family: "Montserrat";
                 font-style: normal;
-                font-weight: 400;
+                font-weight: 600;
                 font-size: 28px;
                 line-height: 37px;
                 text-align: center;
-                color: #2a2c35;
-                max-width: 90%;
+                // color: #2a2c35;
+                color: #005bbb;
+                max-width: 95%;
+                text-transform: uppercase;
             }
             .flag {
                 width: 95%;
                 height: 250px;
-                border: 1px solid #2a2c35;
+                border: 1px solid white;
+
                 img {
                     width: 100%;
                     height: 100%;
@@ -84,12 +207,12 @@ body {
                 }
                 .input.hint--odd {
                     &:nth-child(odd)::placeholder {
-                        opacity: 0.3;
+                        opacity: 0.5;
                     }
                 }
                 .input.hint--even {
                     &:nth-child(even)::placeholder {
-                        opacity: 0.3;
+                        opacity: 0.5;
                     }
                 }
             }
@@ -140,7 +263,7 @@ body {
             }
             .map-block {
                 height: 40%;
-                border: 2px solid #2a2c35;
+                border: 1px solid #2a2c35;
                 display: flex;
                 justify-content: center;
                 img {
