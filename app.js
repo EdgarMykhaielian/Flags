@@ -11,7 +11,7 @@ startScreen.addEventListener("click", (e) => {
         setTimeout(function () {
             cardsContainer.hidden = false;
             getCountries();
-            // document.body.style.backgroundColor = "lightgrey";
+            document.body.style.backgroundColor = "lightblue";
         }, 4000);
     }
 });
@@ -24,6 +24,8 @@ function getCountries() {
 
 function startGame(data) {
     const valuesToRemove = [
+        "643",
+        "531",
         "710",
         "744",
         "850",
@@ -271,7 +273,7 @@ function handleInput(newName) {
         input.forEach((input) => {
             userGuess += input.value;
         });
-        if (userGuess === newName) {
+        if (userGuess.toLowerCase() === newName) {
             document.getElementById("flip-btn-front").disabled = false;
             hint.disabled = true;
             input.forEach((input) => {
