@@ -24,7 +24,7 @@ function getCountries() {
 
 function startGame(data) {
     const valuesToRemove = [
-        "643",
+        "446",
         "531",
         "710",
         "744",
@@ -97,7 +97,7 @@ function getRandomCardData(data) {
 
 function formatNumber(num) {
     if (num < 1000000) {
-        return num;
+        return new Intl.NumberFormat().format(num);
     } else {
         const numInMillions = (num / 1000000).toFixed(2) + " mln";
         return numInMillions;
@@ -117,9 +117,12 @@ function getLanguages(languages) {
 }
 
 function showCard(cardData) {
-    card.classList.remove("is-flipped");
-    setTimeout(() => {
-        card.innerHTML = `
+    const image = new Image();
+    image.src = cardData.flags.png;
+    image.onload = () => {
+        card.classList.remove("is-flipped");
+        setTimeout(() => {
+            card.innerHTML = `
     <div class="card__face card__face--front">
                 <h2>Guess the country to flip the card</h2>
                 <div class="flag">
@@ -143,25 +146,29 @@ function showCard(cardData) {
                 <a href="https://en.wikipedia.org/wiki/${
                     cardData.name.common
                 }" target="_blank"><h5>${cardData.name.common} ${
-            cardData.flag
-        }</h5></a>
+                cardData.flag
+            }</h5></a>
                 </div>
                 <div class="dark-block small">
-                    <p>area: ${cardData.area} km²</p>
+                    <p>area: ${formatNumber(cardData.area)} km²</p>
                     <p>population: ${formatNumber(cardData.population)}</p>
                 </div>
                 <div class="wrapper">
                     <div class="info-block">
-                        <p><i>capital: </i>${cardData.capital}</p>
                         <p><i>language: </i>${getLanguages(
                             cardData.languages
                         )}</p>
                         <p><i>currency: </i>${getCurrency(
                             cardData.currencies
                         )}</p>
+                        <p><i>capital: </i><button class="capital">${
+                            cardData.capital
+                        }</button></p>
+                        <div class="capitalTime"></div>
+                        <div class="capitalWeather"></div>
                     </div>
                     <div class="btn-block">
-                        <button class="flip-btn"><svg width="60" height="42" viewBox="0 0 60 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <button class="flip-btn" id="flip-btn-back"><svg width="60" height="42" viewBox="0 0 60 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3067 26.4335C8.2469 24.9668 5.33353 23.0467 3.92029 20.9265C6.83331 16.5863 15.7536 13.3 26.667 12.7331V17.1798C26.667 17.2933 26.8605 17.3463 26.9805 17.2663L39.2068 8.73985C39.2375 8.72032 39.2561 8.68637 39.2561 8.64963C39.2561 8.61336 39.2375 8.57941 39.2068 8.55988L26.9805 0.0329701C26.8605 -0.0470168 26.667 0.0329703 26.667 0.119467V4.7331C11.6871 5.46647 0 11.073 0 17.8595V23.9929C0 26.2995 1.33323 28.5061 3.75327 30.4332C5.73389 31.9311 7.92976 33.1202 10.2666 33.9601C11.5998 34.467 13.28 33.8736 13.28 32.8868V27.5532C13.2293 27.0101 12.8378 26.5595 12.3067 26.4335Z" fill="#2A2C35" fill-opacity="0.8"/>
                             <path d="M56.2466 11.419C54.266 9.92114 52.0702 8.73208 49.7333 7.89219C48.4001 7.3853 46.72 7.97868 46.72 8.96549V14.299C46.7841 14.8296 47.1729 15.2635 47.6933 15.3858C51.7531 16.8856 54.6665 18.8057 56.0797 20.9258C53.1667 25.2659 44.2464 28.5523 33.333 29.1192V24.6725C33.333 24.559 33.1395 24.506 33.0195 24.586L20.7932 33.1124C20.7625 33.132 20.7439 33.1659 20.7439 33.2026C20.7439 33.2389 20.7625 33.2729 20.7932 33.2924L33.0195 41.8193C33.1395 41.8993 33.333 41.8193 33.333 41.7328V37.1192C48.3129 36.3858 60 30.7788 60 23.9916V17.8582C60 15.5516 58.6668 13.345 56.2467 11.4183L56.2466 11.419Z" fill="#2A2C35" fill-opacity="0.8"/>
                             </svg>
@@ -174,13 +181,18 @@ function showCard(cardData) {
                 </div>
             </div>
         `;
-        if (preloader) {
-            preloader.remove();
-        }
-        assignCardFlipListener();
-        makeInput(cardData);
-        initMap(cardData);
-    }, 200);
+            if (preloader) {
+                preloader.remove();
+            }
+            const capitalBtn = document.querySelector(".capital");
+            capitalBtn.addEventListener("click", function () {
+                showCapitalInfo(cardData);
+            });
+            assignCardFlipListener();
+            makeInput(cardData);
+            initMap(cardData);
+        }, 250);
+    };
 }
 
 function initMap(cardData) {
@@ -224,11 +236,17 @@ function initMap(cardData) {
 }
 
 function assignCardFlipListener() {
-    const btnFlip = document.querySelectorAll(".flip-btn");
-    btnFlip.forEach((btn) => {
-        btn.addEventListener("click", function () {
-            card.classList.toggle("is-flipped");
-        });
+    const frontBtn = document.getElementById("flip-btn-front");
+    const backBtn = document.getElementById("flip-btn-back");
+    frontBtn.addEventListener("click", function () {
+        card.classList.toggle("is-flipped");
+        frontBtn.disabled = true;
+    });
+    backBtn.addEventListener("click", function () {
+        card.classList.toggle("is-flipped");
+        setTimeout(() => {
+            frontBtn.disabled = false;
+        }, 500);
     });
 }
 
@@ -277,7 +295,7 @@ function handleInput(newName) {
             document.getElementById("flip-btn-front").disabled = false;
             hint.disabled = true;
             input.forEach((input) => {
-                input.style.color = "#005bbb";
+                input.style.color = "#2E8B57";
                 input.style.fontWeight = "600";
                 input.disabled = true;
             });
@@ -352,4 +370,65 @@ function handleInput(newName) {
         //     }
         // });
     });
+}
+
+function showCapitalInfo(cardData) {
+    const capital = {
+        lat:
+            cardData.capitalInfo && cardData.capitalInfo.latlng
+                ? cardData.capitalInfo.latlng[0]
+                : cardData.latlng[0],
+        lng:
+            cardData.capitalInfo && cardData.capitalInfo.latlng
+                ? cardData.capitalInfo.latlng[1]
+                : cardData.latlng[1],
+    };
+    getCapitalTime(capital);
+    getCapitalWeather(capital);
+}
+
+function getCapitalTime(capital) {
+    const newDate = new Date();
+    const timestamp =
+        newDate.getTime() / 1000 + newDate.getTimezoneOffset() * 60;
+
+    fetch(
+        `https://maps.googleapis.com/maps/api/timezone/json?location=${capital.lat}%2C${capital.lng}&timestamp=${timestamp}&key=AIzaSyD-CJTk-t_1_pMOhzH2bVKk5K8XsqgKCrw`
+    )
+        .then((response) => response.json())
+        .then((data) => getTimefromZone(data));
+
+    function getTimefromZone(data) {
+        const newDate = new Date();
+        const timestamp =
+            newDate.getTime() / 1000 + newDate.getTimezoneOffset() * 60;
+
+        const offsets = data.rawOffset * 1000 + data.dstOffset * 1000;
+
+        const nowLocal = new Date(timestamp * 1000 + offsets);
+        const nowLocalString = nowLocal.toLocaleTimeString("ukr");
+        const capitalTime = document.querySelector(".capitalTime");
+        capitalTime.innerHTML = `
+    <p class="capital-info"><i>local time: </i>${nowLocalString}</p>
+    `;
+    }
+}
+
+function getCapitalWeather(capital) {
+    fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${capital.lat}&lon=${capital.lng}&appid=97436b7a7cd00fd666dc78d53977d438&units=metric`
+    )
+        .then((response) => response.json())
+        .then((data) => showWeather(data));
+
+    function showWeather(data) {
+        const capitalWeather = document.querySelector(".capitalWeather");
+        capitalWeather.innerHTML = `
+        <p class="capital-info"><i>Local weather: ${
+            Math.round(data.main.temp) + "°"
+        } <img class="weatherIcon" src="https://openweathermap.org/img/wn/${
+            data.weather[0].icon
+        }@2x.png"></i></p>
+        `;
+    }
 }

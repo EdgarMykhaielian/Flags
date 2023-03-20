@@ -133,14 +133,13 @@ body {
     .card__inner {
         width: 100%;
         height: 100%;
-        transition: transform 1s;
+        transition: transform 1.1s;
         transform-style: preserve-3d;
         position: relative;
         .card__face {
             border-radius: 30px;
             border: 1px solid rgb(42, 44, 53);
             background-color: #d9d9d9;
-            // background-color: lightblue;
             position: absolute;
             width: 100%;
             height: 100%;
@@ -174,7 +173,6 @@ body {
             }
             .flag {
                 width: 95%;
-                height: 250px;
                 border: 1px solid white;
 
                 img {
@@ -203,6 +201,9 @@ body {
                     padding: 1px;
                     &::placeholder {
                         opacity: 0;
+                    }
+                    &:disabled {
+                        opacity: 1;
                     }
                 }
                 .input.hint--odd {
@@ -292,6 +293,22 @@ body {
                         text-transform: capitalize;
                     }
                 }
+                .capital {
+                    font-family: "Montserrat";
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 20px;
+                    line-height: 28px;
+                    color: #005bbb;
+                    border: 1px solid #e5b855;
+                }
+                .weatherIcon {
+                    width: 30px;
+                    height: 30px;
+                }
+                .capital-info {
+                    color: #005bbb;
+                }
             }
             .btn-block {
                 padding: 10px 0;
@@ -305,7 +322,8 @@ body {
 .card__inner.is-flipped {
     transform: rotateY(180deg);
 }
-#flip-btn-front {
+.flip-btn,
+.next-btn {
     transition-duration: 0.8s;
     transition-property: transform;
     &:hover {
