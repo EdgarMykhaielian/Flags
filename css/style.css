@@ -1315,8 +1315,8 @@ body {
   font-weight: 500;
   font-size: 20px;
   line-height: 28px;
-  color: #005bbb;
-  border: 1px solid #e5b855;
+  background-color: #005bbb;
+  color: #d9d9d9;
 }
 .card .card__inner .card__face--back .info-block .weatherIcon {
   width: 30px;
