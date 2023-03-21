@@ -129,17 +129,17 @@ function getLanguages(languages) {
 }
 
 function showCard(cardData) {
-    console.log(cardData);
-    const image = new Image();
-    image.src = cardData.flags.png;
-    image.onload = () => {
-        card.classList.remove("is-flipped");
-        setTimeout(() => {
-            card.innerHTML = `
+    /* OPTION FOR FLAGS IMAGES FROM API */
+    // const image = new Image();
+    // image.src = cardData.flags.png;
+    // image.onload = () => {
+    card.classList.remove("is-flipped");
+    setTimeout(() => {
+        card.innerHTML = `
     <div class="card__face card__face--front">
                 <h2>Guess the country to flip the card</h2>
                 <div class="flag">
-                    <img src="${cardData.flags.png}">
+                    <img src="../assets/flagsImg/${cardData.code.toLowerCase()}.png">
                 </div>
                 <div class="inputs"></div>
                 <button class="hint">Hint</button>
@@ -159,8 +159,8 @@ function showCard(cardData) {
                 <a href="https://en.wikipedia.org/wiki/${
                     cardData.name.common
                 }" target="_blank"><h5>${cardData.name.common} ${
-                cardData.flag
-            }</h5></a>
+            cardData.flag
+        }</h5></a>
                 </div>
                 <div class="dark-block small">
                     <p>area: ${formatNumber(cardData.area)} km²</p>
@@ -194,19 +194,19 @@ function showCard(cardData) {
                 </div>
             </div>
         `;
-            if (preloader) {
-                preloader.remove();
-            }
-            const capitalBtn = document.querySelector(".capital");
-            capitalBtn.addEventListener("click", function () {
-                showCapitalInfo(cardData);
-            });
-            assignCardFlipListener();
-            makeInput(cardData);
-            initMap(cardData);
-        }, 250);
-    };
+        if (preloader) {
+            preloader.remove();
+        }
+        const capitalBtn = document.querySelector(".capital");
+        capitalBtn.addEventListener("click", function () {
+            showCapitalInfo(cardData);
+        });
+        assignCardFlipListener();
+        makeInput(cardData);
+        initMap(cardData);
+    }, 250);
 }
+// }
 
 function initMap(cardData) {
     const country = { lat: cardData.latlng[0], lng: cardData.latlng[1] };
@@ -264,7 +264,7 @@ function assignCardFlipListener() {
 }
 
 function makeInput(cardData) {
-    const inputs = document.querySelector(".inputs");
+    const inputContainer = document.querySelector(".inputs");
     const newName = cardData.name.common
         .toLowerCase()
         .replace(/[^a-z\s]/gi, "");
@@ -273,41 +273,41 @@ function makeInput(cardData) {
         html += `
         <input disabled class="input" type="text" pattern="([a-zA-z\s]){2,}" maxlength="1" placeholder=${newName[i]}>`;
     }
-    inputs.innerHTML = html;
-    inputs.firstElementChild.disabled = false;
+    inputContainer.innerHTML = html;
+    inputContainer.firstElementChild.disabled = false;
     handleInput(newName);
 }
 
 function handleInput(newName) {
     const hint = document.querySelector(".hint");
-    const input = document.querySelectorAll(".input");
-    const lastInput = input[input.length - 1];
+    const inputs = document.querySelectorAll(".input");
+    const lastInput = inputs[inputs.length - 1];
 
     let userGuess = "";
 
     /* hint button */
     hint.addEventListener("click", function () {
-        if (input[0].classList.contains("hint--odd")) {
-            input.forEach((i) => {
+        if (inputs[0].classList.contains("hint--odd")) {
+            inputs.forEach((i) => {
                 i.classList.add("hint--even");
                 hint.style.opacity = "0";
                 hint.style.cursor = "default";
             });
         }
-        input.forEach((i) => {
+        inputs.forEach((i) => {
             i.classList.add("hint--odd");
         });
         hint.innerText = "Show";
     });
 
     lastInput.addEventListener("input", () => {
-        input.forEach((input) => {
+        inputs.forEach((input) => {
             userGuess += input.value;
         });
         if (userGuess.toLowerCase() === newName) {
             document.getElementById("flip-btn-front").disabled = false;
             hint.disabled = true;
-            input.forEach((input) => {
+            inputs.forEach((input) => {
                 input.style.color = "#2E8B57";
                 input.style.fontWeight = "600";
                 input.disabled = true;
@@ -317,20 +317,20 @@ function handleInput(newName) {
         }
     });
 
-    input.forEach((i, index) => {
-        i.addEventListener("input", () => {
-            if (i.value.length === 1 || i.value === " ") {
-                if (index === input.length - 1) {
+    inputs.forEach((input, index) => {
+        input.addEventListener("input", () => {
+            if (input.value.length === 1 || input.value === " ") {
+                if (index === inputs.length - 1) {
                     return;
                 }
-                i.nextElementSibling.disabled = false;
-                i.nextElementSibling.focus();
+                input.nextElementSibling.disabled = false;
+                input.nextElementSibling.focus();
             }
         });
 
-        i.addEventListener("keydown", function (event) {
+        input.addEventListener("keydown", function (event) {
             const key = event.key;
-            const nextElementSibling = i.nextElementSibling;
+            const nextElementSibling = input.nextElementSibling;
 
             if (key === "Backspace") {
                 userGuess = userGuess.slice(0, -1);
@@ -338,50 +338,14 @@ function handleInput(newName) {
                 if (index === 0) {
                     return;
                 }
-                if (!nextElementSibling && i.value != "") {
+                if (!nextElementSibling && input.value != "") {
                     return;
                 }
-                i.value = "";
-                i.disabled = true;
-                i.previousElementSibling.focus();
+                input.value = "";
+                input.disabled = true;
+                input.previousElementSibling.focus();
             }
         });
-
-        // i.addEventListener("input", () => {
-        //     const inputValue = i.value.toLowerCase();
-        //     const letter = newName.charAt(index);
-        //     let letterIndex = -1;
-
-        //     while (
-        //         (letterIndex = newName.indexOf(letter, letterIndex + 1)) !== -1
-        //     ) {
-        //         if (inputValue === letter && index === letterIndex) {
-        //             if (
-        //                 lastIncorrectIndex === -1 ||
-        //                 index > lastIncorrectIndex
-        //             ) {
-        //                 userGuess += letter;
-        //                 console.log(userGuess);
-        //                 console.log(lastIncorrectIndex);
-
-        //                 if (userGuess === newName) {
-        //                     input.forEach((input) => {
-        //                         input.style.color = "green";
-        //                         input.disabled = true;
-        //                     });
-        //                     document.getElementById(
-        //                         "flip-btn-front"
-        //                     ).disabled = false;
-        //                     hint.disabled = true;
-        //                 }
-        //             }
-        //             break;
-        //         } else {
-        //             lastIncorrectIndex = index;
-        //             break;
-        //         }
-        //     }
-        // });
     });
 }
 
