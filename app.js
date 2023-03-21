@@ -2,6 +2,7 @@ const cardsContainer = document.querySelector(".card");
 const card = document.querySelector(".card__inner");
 const startScreen = document.querySelector(".start-screen");
 const preloader = document.getElementById("preloader");
+const seenCards = [];
 
 startScreen.addEventListener("click", (e) => {
     if (e.target.closest(".start-btn")) {
@@ -91,7 +92,13 @@ function startGame(data) {
 }
 
 function getRandomCardData(data) {
-    let random = Math.floor(Math.random() * data.length) + 1;
+    let random;
+    do {
+        random = Math.floor(Math.random() * data.length) + 1;
+    } while (seenCards.includes(random));
+
+    seenCards.push(random);
+    console.log(seenCards);
     return data[random];
 }
 
@@ -112,11 +119,17 @@ function getCurrency(currencies) {
 
 function getLanguages(languages) {
     const lngs = Object.values(languages);
+    if (lngs.length > 8) {
+        const lngsShort = lngs.slice(0, 5);
+        const lngsFormatted = lngsShort.join(", ") + "...";
+        return lngsFormatted;
+    }
     const lngsFormatted = lngs.join(", ");
     return lngsFormatted;
 }
 
 function showCard(cardData) {
+    console.log(cardData);
     const image = new Image();
     image.src = cardData.flags.png;
     image.onload = () => {
