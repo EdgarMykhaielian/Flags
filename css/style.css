@@ -1039,7 +1039,6 @@ body {
     background-position: 0 0;
   }
   100% {
-    /* background-position: 719px 0; */
     background-position: 1000px 0;
   }
 }
@@ -1048,7 +1047,6 @@ body {
     background-position: 0 0;
   }
   100% {
-    /* background-position: 719px 0; */
     background-position: 1000px 0;
   }
 }
@@ -1057,7 +1055,6 @@ body {
     background-position: 4096px 0;
   }
   100% {
-    /* background-position: 719px 0; */
     background-position: 0px 0;
   }
 }
@@ -1066,7 +1063,6 @@ body {
     background-position: 4096px 0;
   }
   100% {
-    /* background-position: 719px 0; */
     background-position: 0px 0;
   }
 }
@@ -1183,6 +1179,7 @@ body {
 }
 .card .card__inner .card__face--front .inputs .input:disabled {
   opacity: 1;
+  background: none;
 }
 .card .card__inner .card__face--front .inputs .input.hint--odd:nth-child(odd)::-webkit-input-placeholder {
   opacity: 0.5;

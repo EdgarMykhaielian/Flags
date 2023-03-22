@@ -275,19 +275,35 @@ function makeInput(cardData) {
     let html = "";
     for (let i = 0; i < newName.length; i++) {
         html += `
-        <input disabled class="input" type="text" pattern="([a-zA-z\s]){2,}" maxlength="1" placeholder=${newName[i]}>`;
+        <input class="input" type="text" pattern="([a-zA-z\s]){2,}" maxlength="1" placeholder=${newName[i]}>`;
     }
     inputContainer.innerHTML = html;
-    inputContainer.firstElementChild.disabled = false;
+    // inputContainer.firstElementChild.disabled = false;
     handleInput(newName);
 }
 
 function handleInput(newName) {
     const hint = document.querySelector(".hint");
+    const inputContainer = document.querySelector(".inputs");
     const inputs = document.querySelectorAll(".input");
     const lastInput = inputs[inputs.length - 1];
 
     let userGuess = "";
+
+    inputContainer.addEventListener("change", () => {
+        const values = Array.from(inputs)
+            .map((input) => input.value)
+            .join("");
+        if (values.toLowerCase() === newName) {
+            document.getElementById("flip-btn-front").disabled = false;
+            hint.disabled = true;
+            inputs.forEach((input) => {
+                input.style.color = "#2E8B57";
+                input.style.fontWeight = "600";
+                input.disabled = true;
+            });
+        }
+    });
 
     /* hint button */
     hint.addEventListener("click", function () {
@@ -327,7 +343,7 @@ function handleInput(newName) {
                 if (index === inputs.length - 1) {
                     return;
                 }
-                input.nextElementSibling.disabled = false;
+                // input.nextElementSibling.disabled = false;
                 input.nextElementSibling.focus();
             }
         });
@@ -338,10 +354,10 @@ function handleInput(newName) {
 
             if (key.length === 1 && input.value.length === 1) {
                 input.value = key;
-                input.nextElementSibling.disabled = false;
+                // input.nextElementSibling.disabled = false;
                 setTimeout(() => {
                     input.nextElementSibling.focus();
-                }, 100);
+                });
             }
 
             if (key === "Backspace") {
@@ -355,10 +371,10 @@ function handleInput(newName) {
                     return;
                 }
 
-                input.disabled = true;
+                // input.disabled = true;
                 setTimeout(() => {
                     input.previousElementSibling.focus();
-                }, 100);
+                });
             }
         });
     });
