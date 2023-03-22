@@ -105,6 +105,10 @@ function getRandomCardData(data) {
 function formatNumber(num) {
     if (num < 1000000) {
         return new Intl.NumberFormat().format(num);
+    }
+    if (num > 1000000000) {
+        const numInBillions = (num / 1000000000).toFixed(2) + " bln";
+        return numInBillions;
     } else {
         const numInMillions = (num / 1000000).toFixed(2) + " mln";
         return numInMillions;
@@ -139,7 +143,7 @@ function showCard(cardData) {
     <div class="card__face card__face--front">
                 <h2>Guess the country to flip the card</h2>
                 <div class="flag">
-                    <img src="../assets/flagsImg/${cardData.code.toLowerCase()}.png">
+                    <img src="./assets/flagsImg/${cardData.code.toLowerCase()}.png">
                 </div>
                 <div class="inputs"></div>
                 <button class="hint">Hint</button>
@@ -332,18 +336,29 @@ function handleInput(newName) {
             const key = event.key;
             const nextElementSibling = input.nextElementSibling;
 
+            if (key.length === 1 && input.value.length === 1) {
+                input.value = key;
+                input.nextElementSibling.disabled = false;
+                setTimeout(() => {
+                    input.nextElementSibling.focus();
+                }, 100);
+            }
+
             if (key === "Backspace") {
                 userGuess = userGuess.slice(0, -1);
 
                 if (index === 0) {
                     return;
                 }
+                input.value = "";
                 if (!nextElementSibling && input.value != "") {
                     return;
                 }
-                input.value = "";
+
                 input.disabled = true;
-                input.previousElementSibling.focus();
+                setTimeout(() => {
+                    input.previousElementSibling.focus();
+                }, 100);
             }
         });
     });

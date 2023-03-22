@@ -3,13 +3,14 @@
         align-items: flex-start;
     }
     .card {
-        max-width: 90vw;
-        max-height: 80vh;
+        width: 90vw;
+        height: 80vh;
     }
     .input {
         font-size: 20px;
     }
     .start-screen {
+        height: 90vh;
         h1,
         h6 {
             padding: 0 10px;
@@ -26,6 +27,27 @@
         h6 {
             font-size: 20px;
             color: #e5b855;
+        }
+        .start-btn {
+            padding-bottom: 50px;
+        }
+    }
+}
+
+@media only screen and (max-height: 660px) {
+    .card {
+        width: 330px;
+        .card__inner {
+            .card__face--back {
+                .info-block {
+                    p {
+                        font-size: 16px;
+                    }
+                    .capital {
+                        font-size: 16px;
+                    }
+                }
+            }
         }
     }
 }
