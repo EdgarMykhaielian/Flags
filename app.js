@@ -76,9 +76,8 @@ function startGame(data) {
         (item) => !valuesToRemove.includes(item.ccn3)
     );
     data = filteredData;
-    console.log(data);
     playNextCard();
-
+    console.clear();
     card.addEventListener("click", (e) => {
         if (e.target.closest(".next-btn")) {
             playNextCard();
@@ -98,7 +97,6 @@ function getRandomCardData(data) {
     } while (seenCards.includes(random));
 
     seenCards.push(random);
-    console.log(seenCards);
     return data[random];
 }
 
@@ -136,7 +134,7 @@ function showCard(cardData) {
     /* OPTION FOR FLAGS IMAGES FROM API */
     // const image = new Image();
     // image.src = cardData.flags.png;
-    // image.onload = () => {
+    // image.onload = () => {}
     card.classList.remove("is-flipped");
     setTimeout(() => {
         card.innerHTML = `
@@ -210,7 +208,6 @@ function showCard(cardData) {
         initMap(cardData);
     }, 250);
 }
-// }
 
 function initMap(cardData) {
     const country = { lat: cardData.latlng[0], lng: cardData.latlng[1] };
